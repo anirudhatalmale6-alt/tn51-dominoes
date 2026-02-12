@@ -6985,16 +6985,20 @@ function renderBoneyard(){
 
   const dpr = window.devicePixelRatio || 1;
 
-  // Tile dimensions
-  const tileW = 48;
-  const tileH = 96;
-  const gap = 4;
+  // Tile dimensions — shrunk ~15% from original 48x96
+  const tileW = 40;
+  const tileH = 80;
+  const gap = 3;
 
-  // Layout: 8 rows, row N starts at column N and has (8-N) tiles
-  // Row 0: 7-7, 7-6, 7-5, 7-4, 7-3, 7-2, 7-1, 7-0  (8 tiles)
-  // Row 1: 6-6, 6-5, 6-4, 6-3, 6-2, 6-1, 6-0        (7 tiles)
+  // Layout: 8 rows, RIGHT-ALIGNED staircase
+  // Doubles on the left of each row, suits extend to the right.
+  // Going straight up or right from any tile shows all tiles in that suit.
+  //
+  // Row 0: 7-7, 7-6, 7-5, 7-4, 7-3, 7-2, 7-1, 7-0  (8 tiles, no indent)
+  // Row 1:      6-6, 6-5, 6-4, 6-3, 6-2, 6-1, 6-0   (7 tiles, indented 1)
+  // Row 2:           5-5, 5-4, 5-3, 5-2, 5-1, 5-0    (6 tiles, indented 2)
   // ...
-  // Row 7: 0-0                                         (1 tile)
+  // Row 7:                                        0-0  (1 tile, indented 7)
   const rows = [];
   for(let high = 7; high >= 0; high--){
     const row = [];
@@ -7051,15 +7055,17 @@ function renderBoneyard(){
     return session.game._is_trump_tile(tile);
   };
 
-  // Draw each tile
+  // Draw each tile — RIGHT-ALIGNED layout
+  // Each row is indented from the LEFT by rowIdx tile-widths.
+  // This means the rightmost tile of every row aligns at the same x position.
   for(let rowIdx = 0; rowIdx < rows.length; rowIdx++){
     const row = rows[rowIdx];
-    // Offset: each row shifts right by rowIdx positions
-    const xOffset = rowIdx * (tileW + gap) / 2;
+    // Indent from left: rowIdx tiles worth of space
+    const xIndent = rowIdx * (tileW + gap);
 
     for(let colIdx = 0; colIdx < row.length; colIdx++){
       const tile = row[colIdx];
-      const x = xOffset + colIdx * (tileW + gap) + gap;
+      const x = xIndent + colIdx * (tileW + gap) + gap;
       const y = rowIdx * (tileH + gap) + gap;
 
       const played = isTilePlayedBones(tile[0], tile[1]);
