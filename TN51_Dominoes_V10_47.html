@@ -6611,6 +6611,7 @@ async function handlePlayer1Click(spriteSlotIndexOrElement){
 
 function dealDominoes(){
   hideGameEndSummary();
+  hideRoundEndSummary();
   shadowLayer.innerHTML = '';
   spriteLayer.innerHTML = '';
   sprites.length = 0;
@@ -7208,12 +7209,9 @@ function showHandEndPopup(){
     }
     // Show final scores summary (has its own New Game button inside)
     showGameEndSummary();
-    // Don't show the separate Next Round button — it's inside the summary popup
   } else {
-    btnNextHand.textContent = 'Next Round';
-    btnNextHand.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
-    // Show the button only for non-game-win rounds
-    btnNextHand.style.display = 'block';
+    // Show round-end summary popup (has its own Next Round button inside)
+    showRoundEndSummary();
   }
 }
 
@@ -7697,6 +7695,7 @@ function startNewHand(){
     bonesToggle.style.pointerEvents = 'auto';
     bonesToggle.style.opacity = '';
   }
+  hideRoundEndSummary();
   shadowLayer.innerHTML = '';
   spriteLayer.innerHTML = '';
   sprites.length = 0;
@@ -7972,6 +7971,87 @@ function showGameEndSummary(){
 
 function hideGameEndSummary(){
   const overlay = document.getElementById('gameEndOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+
+function showRoundEndSummary(){
+  // Show round-end summary popup (same style as game-end but with round info + Next Round button)
+  let overlay = document.getElementById('roundEndOverlay');
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'roundEndOverlay';
+    overlay.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;z-index:1001;display:flex;align-items:center;justify-content:center;pointer-events:none;padding-top:25%;';
+    document.getElementById('tableMain').appendChild(overlay);
+  }
+  const t1p = session.game.team_points[0];
+  const t2p = session.game.team_points[1];
+  const t1m = session.team_marks[0];
+  const t2m = session.team_marks[1];
+  const status = session.status;
+
+  // Parse the result for a cleaner display
+  let resultText = '';
+  let resultColor = '#fff';
+  if(status.includes('Bid made')){
+    resultText = 'Bid Made!';
+    resultColor = '#4ade80';  // green
+  } else if(status.includes('Bid failed')){
+    resultText = 'Bid Failed!';
+    resultColor = '#f87171';  // red
+  } else if(status.includes('SET!')){
+    resultText = 'SET!';
+    resultColor = '#f87171';
+  } else if(status.includes('Nel-O success')){
+    resultText = 'Nel-O Success!';
+    resultColor = '#4ade80';
+  } else if(status.includes('Nel-O failed')){
+    resultText = 'Nel-O Failed!';
+    resultColor = '#f87171';
+  } else {
+    resultText = 'Round Over';
+  }
+
+  overlay.innerHTML = `
+    <div style="background:linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);border-radius:16px;padding:0;text-align:center;color:#fff;font-family:inherit;box-shadow:0 8px 32px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.2);pointer-events:auto;min-width:200px;max-width:80%;overflow:hidden;">
+      <div style="padding:14px 28px 10px;">
+        <div style="font-size:18px;font-weight:900;margin-bottom:8px;color:${resultColor};text-shadow:0 1px 3px rgba(0,0,0,0.3);">${resultText}</div>
+        <div style="font-size:11px;opacity:0.7;margin-bottom:10px;">Round Points</div>
+        <div style="display:flex;gap:24px;justify-content:center;margin-bottom:6px;">
+          <div style="text-align:center;">
+            <div style="font-size:11px;opacity:0.8;">Team 1</div>
+            <div style="font-size:22px;font-weight:bold;color:#fff;">${t1p}</div>
+            <div style="font-size:10px;opacity:0.6;">pts</div>
+          </div>
+          <div style="width:1px;background:rgba(255,255,255,0.2);"></div>
+          <div style="text-align:center;">
+            <div style="font-size:11px;opacity:0.8;">Team 2</div>
+            <div style="font-size:22px;font-weight:bold;color:#fff;">${t2p}</div>
+            <div style="font-size:10px;opacity:0.6;">pts</div>
+          </div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.12);margin-top:6px;padding-top:8px;">
+          <div style="font-size:11px;opacity:0.7;margin-bottom:4px;">Marks</div>
+          <div style="display:flex;gap:24px;justify-content:center;">
+            <div style="font-size:18px;font-weight:bold;color:#93c5fd;">${t1m}</div>
+            <div style="font-size:14px;opacity:0.5;align-self:center;">-</div>
+            <div style="font-size:18px;font-weight:bold;color:#fca5a5;">${t2m}</div>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.15);padding:10px 28px;">
+        <button id="roundEndNextBtn" style="padding:10px 28px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);border:none;border-radius:10px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);transition:transform 0.15s ease;">Next Round</button>
+      </div>
+    </div>`;
+  overlay.style.display = 'flex';
+  document.getElementById('roundEndNextBtn').addEventListener('click', () => {
+    hideRoundEndSummary();
+    SFX.resumeBgmAfterResult();
+    startNewHand();
+  });
+}
+
+function hideRoundEndSummary(){
+  const overlay = document.getElementById('roundEndOverlay');
   if(overlay) overlay.style.display = 'none';
 }
 
@@ -8697,6 +8777,7 @@ function replayHand(index){
     if(toggleBtn) toggleBtn.classList.remove('active');
   }
   hideGameEndSummary();
+  hideRoundEndSummary();
 
   // Re-enable bones button
   const bonesToggle = document.getElementById('boneyard2Toggle');
