@@ -8012,34 +8012,32 @@ function showRoundEndSummary(){
   }
 
   overlay.innerHTML = `
-    <div style="background:linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);border-radius:16px;padding:0;text-align:center;color:#fff;font-family:inherit;box-shadow:0 8px 32px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.2);pointer-events:auto;min-width:200px;max-width:80%;overflow:hidden;">
-      <div style="padding:14px 28px 10px;">
-        <div style="font-size:18px;font-weight:900;margin-bottom:8px;color:${resultColor};text-shadow:0 1px 3px rgba(0,0,0,0.3);">${resultText}</div>
-        <div style="font-size:11px;opacity:0.7;margin-bottom:10px;">Round Points</div>
-        <div style="display:flex;gap:24px;justify-content:center;margin-bottom:6px;">
+    <div style="background:linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);border-radius:14px;padding:0;text-align:center;color:#fff;font-family:inherit;box-shadow:0 8px 32px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.2);pointer-events:auto;max-width:55%;overflow:hidden;">
+      <div style="padding:10px 14px 8px;">
+        <div style="font-size:16px;font-weight:900;margin-bottom:4px;color:${resultColor};text-shadow:0 1px 3px rgba(0,0,0,0.3);">${resultText}</div>
+        <div style="font-size:10px;opacity:0.7;margin-bottom:6px;">Round Points</div>
+        <div style="display:flex;gap:16px;justify-content:center;margin-bottom:4px;">
           <div style="text-align:center;">
-            <div style="font-size:11px;opacity:0.8;">Team 1</div>
-            <div style="font-size:22px;font-weight:bold;color:#fff;">${t1p}</div>
-            <div style="font-size:10px;opacity:0.6;">pts</div>
+            <div style="font-size:10px;opacity:0.8;">Team 1</div>
+            <div style="font-size:20px;font-weight:bold;color:#fff;">${t1p}</div>
           </div>
           <div style="width:1px;background:rgba(255,255,255,0.2);"></div>
           <div style="text-align:center;">
-            <div style="font-size:11px;opacity:0.8;">Team 2</div>
-            <div style="font-size:22px;font-weight:bold;color:#fff;">${t2p}</div>
-            <div style="font-size:10px;opacity:0.6;">pts</div>
+            <div style="font-size:10px;opacity:0.8;">Team 2</div>
+            <div style="font-size:20px;font-weight:bold;color:#fff;">${t2p}</div>
           </div>
         </div>
-        <div style="border-top:1px solid rgba(255,255,255,0.12);margin-top:6px;padding-top:8px;">
-          <div style="font-size:11px;opacity:0.7;margin-bottom:4px;">Marks</div>
-          <div style="display:flex;gap:24px;justify-content:center;">
-            <div style="font-size:18px;font-weight:bold;color:#93c5fd;">${t1m}</div>
-            <div style="font-size:14px;opacity:0.5;align-self:center;">-</div>
-            <div style="font-size:18px;font-weight:bold;color:#fca5a5;">${t2m}</div>
+        <div style="border-top:1px solid rgba(255,255,255,0.12);margin-top:4px;padding-top:5px;">
+          <div style="font-size:10px;opacity:0.7;margin-bottom:2px;">Marks</div>
+          <div style="display:flex;gap:14px;justify-content:center;">
+            <div style="font-size:16px;font-weight:bold;color:#93c5fd;">${t1m}</div>
+            <div style="font-size:12px;opacity:0.5;align-self:center;">-</div>
+            <div style="font-size:16px;font-weight:bold;color:#fca5a5;">${t2m}</div>
           </div>
         </div>
       </div>
-      <div style="border-top:1px solid rgba(255,255,255,0.15);padding:10px 28px;">
-        <button id="roundEndNextBtn" style="padding:10px 28px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);border:none;border-radius:10px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);transition:transform 0.15s ease;">Next Round</button>
+      <div style="border-top:1px solid rgba(255,255,255,0.15);padding:8px 14px;">
+        <button id="roundEndNextBtn" style="padding:8px 20px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);border:none;border-radius:10px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2);transition:transform 0.15s ease;">Next Round</button>
       </div>
     </div>`;
   overlay.style.display = 'flex';
